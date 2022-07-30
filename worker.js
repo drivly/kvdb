@@ -1,3 +1,5 @@
+import { set } from './set'
+
 const objs = {}
 
 export default {
@@ -15,7 +17,7 @@ export class KVProxy {
   constructor(state, env) {
     state.blockConcurrencyWhile(
       async (state, env) => {
-        this.db = await env.KVDB.get(state.id, { type: "text" })
+        this.db = await env.KVDB.get(state.id, { type: "json" })
       }
     )
   }
@@ -24,17 +26,13 @@ export class KVProxy {
     const { hostname, pathname, searchParams } = new URL(request.url)
     const paths = pathname.split('/')
     if (paths[0] == 'set') {
-      const [ _, resource
-      ctx.waitUntil(env.KVDB.get(state.id, this.db, { type: "text" }))
+      const [ _, path, value] = paths
+      set(db, path, value)
+      ctx.waitUntil(env.KVDB.get(state.id, this.db, { type: "json" }))
       return this.db
     }
     else {
        return this.db
     }
-    
-//     Object.fromEntries(searchParams)
-//     let storagePromise = this.state.storage.put(ip, data)
-//     await storagePromise
-//     return new Response(ip + " stored " + data)
   }
 }
