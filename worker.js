@@ -25,10 +25,12 @@ export class KVProxy {
   async fetch(req, env, ctx) {
     const { hostname, pathname, searchParams } = new URL(request.url)
     const paths = pathname.split('/')
-    if (paths[0] == 'set') {
+    if (paths[0] == 'put') {
       const [ _, path, value] = paths
       set(db, path, value)
-      ctx.waitUntil(env.KVDB.get(state.id, this.db, { type: "json" }))
+      // TODO: if there are multiple writes within 1 sec, we will get a KV error, so we need to wait 1 sec
+      ctx.waitUntil(env.KVDB.put(state.id, this.db, { type: "json" })
+                    .then(data => this.lastWrite == Date.now())
       return this.db
     }
     else {
