@@ -1,6 +1,6 @@
 name = "kvdb"
 account_id = "b6641681fe423910342b9ffa1364c76d"
-main = "worker"
+main = "worker.js"
 usage_model = "unbound"
 compatibility_date = "2022-06-21"
 
